@@ -313,7 +313,7 @@ check_next:
 int main(void)
 {
     MESSAGE = malloc(100);
-    int oy, ox, ny, nx, combo = 0;
+    int oy, ox, ny, nx, combo = 0, can_eat = 0;
     char y1, x1, y2, x2;
     while (1)
     {
@@ -330,9 +330,18 @@ int main(void)
             printf("BLACK:\033[0m ");
         }
         scanf("%d %d - %d %d", &oy, &ox, &ny, &nx);
+        can_eat = 0;
+        for (int y = 0; y < 8; ++y)
+        {
+            for (int x = 0; x < 8; ++x)
+            {
+                if (check_kills(x, y, 1, 1) || check_kills(x, y, -1, 1) || check_kills(x, y, 1, -1) || check_kills(x, y, -1, -1))
+                    ++can_eat;
+            }
+        }
         if (can_move(ox - 1, oy - 1, nx - 1, ny - 1) == 1)
         {
-            if (check_kills(ox - 1, oy - 1, 1, 1) || check_kills(ox - 1, oy - 1, -1, 1) || check_kills(ox - 1, oy - 1, 1, -1) || check_kills(ox - 1, oy - 1, -1, -1))
+            if (can_eat)
             {
                 if (check_kills(ox - 1, oy - 1, (nx - ox) / modul(nx - ox), (ny - oy) / modul(ny - oy)) && move(oy - 1, ox - 1, ny - 1, nx - 1))
                 {
